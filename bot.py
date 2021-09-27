@@ -7,8 +7,6 @@ import asyncio  #비동기 함수 호출
 
 client = discord.Client()  #discord.Client()를 한번에 줄여줌
 
-embed = discord.Embed(title="Embed", description="Embed 내용.", color=0x00aaaa)  # Embed를 선언해줌
-
 dirctory = os.path.dirname(__file__)  #현 파이썬 모듈의 디렉토리 주소를 dirctory에 저장
 file = discord.File(dirctory + "\\text.txt")  #dirctory 디렉터리 내에 있는 텍스트 파일을 file에 지정함
 
@@ -23,6 +21,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    embed = discord.Embed(title="Embed", description="Embed 내용.", color=0x00aaaa)  # Embed를 선언해줌
     embed.set_author(name="작성자의 이름", icon_url=message.author.avatar_url)  #Embed 맨 윗값 선언
     embed.set_footer(text="이것은 footer의 값입니다.")  #Embed 맨 아랫값 선언
     embed.add_field(name="이것은 field입니다.", value="시험 중이에요", inline=False) #Embed 필드 값 선언
@@ -58,13 +57,18 @@ async def on_error(event, *args, **kwargs):  #실행중 에러 발생 시(event:
         message.channel.send(str(exc[0].__name__) + "" + str(exc[1]))  #해당 에러를 출력
     return
 
-@client.event
+'''@client.event
 async def on_typing(channel, user, when):  #유저가 타이핑 중일 때 나타나는 이벤트
     await channel.send(str(user) + "이 작성중!")  #어떤 user가 타이핑 중인지 출--력
-    return
+    return'''
 
 @client.event
-async def on_guild_join(guild):
-    print()
+async def on_member_join(member):
+    await member.guild.get_channel(890628038893666357).send(member.mention + "님 저희 삼칠아파트에 주거하시게 되신걸 환영합니다! 👋  먼저 아파트 게시판의 공지사항을 보러 가주세요!")
+
+@client.event
+async def on_member_remove(member):
+    await member.guild.get_channel(891161943778418699).send(member + "님 저희 삼칠아파트 에서 떠나시는군요! 😂 다른 아파트에서도 잘 사시길 바래요!")
+
 
 client.run(Token) #보안을 위해 다른 코드(to.py)에서 토큰 값을 가져옴
